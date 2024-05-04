@@ -9,17 +9,19 @@ public class Pathfind
     public static List<Node> Astar(LevelGraph lGraph, Node startNode, Node goalNode)
     {
         List<Node> path = new List<Node>();
-        totalCost += 1;
+        totalCost = 0;
 
         Dictionary<Node, Node> visitedNodes = new();
         Dictionary<Node, float> accumulatedCost = new();
-        SimplePriorityQueue<Node, float> nodesToVisit = new SimplePriorityQueue<Node,float>();
+        SimplePriorityQueue<Node> nodesToVisit = new SimplePriorityQueue<Node>();
 
         nodesToVisit.Enqueue(startNode, 0);
         visitedNodes.Add(startNode, startNode);
         accumulatedCost.Add(startNode, 0);
 
         Node currentNode = new Node(Vector3.zero, 0);
+        // Debug.Log(goalNode.getNodePos());
+
         while (nodesToVisit.Count > 0)
         {
             currentNode = nodesToVisit.Dequeue();
@@ -27,32 +29,35 @@ public class Pathfind
             {
                 break;
             }
-        }
 
-        foreach (Node adjNode in lGraph.GetNeighbours(currentNode))
-        {
-            if (!visitedNodes.ContainsKey(adjNode))
+            foreach (Node adjNode in lGraph.GetNeighbours(currentNode))
             {
-                float newCost = accumulatedCost[currentNode] + lGraph.NextMinimumCost(adjNode);
-
-                if(!accumulatedCost.ContainsKey(adjNode) || newCost < accumulatedCost[adjNode])
+                // if the node has not been visited
+                if (!visitedNodes.ContainsKey(adjNode))
                 {
-                    accumulatedCost.Add(adjNode, newCost);
-                    visitedNodes[adjNode] = currentNode;
+                    float newCost = accumulatedCost[currentNode] + lGraph.NextMinimumCost(adjNode);
 
-                    float dist = Vector2.Distance(adjNode.getNodePos(), goalNode.getNodePos());
-                    float priority = newCost + dist;
-                    nodesToVisit.Enqueue(adjNode, priority);
-                    totalCost += newCost;
+                    if(!accumulatedCost.ContainsKey(adjNode) || newCost < accumulatedCost[adjNode])
+                    {
+                        accumulatedCost.Add(adjNode, newCost);
+                        visitedNodes[adjNode] = currentNode;
+
+                        float dist = Vector2.Distance(new Vector2(adjNode.getNodePos().x, adjNode.getNodePos().z), new Vector2(goalNode.getNodePos().x, goalNode.getNodePos().z));
+                        float priority = newCost + dist;
+                        nodesToVisit.Enqueue(adjNode, priority);
+                        
+                        totalCost += newCost;
+                    }
                 }
             }
         }
+
+
         while (currentNode != startNode)
         {
             path.Add(currentNode);
             currentNode = visitedNodes[currentNode];
         }
-        Debug.Log(path.Count);
         path.Reverse();
         return path;
     }

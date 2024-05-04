@@ -24,7 +24,7 @@ public class LevelGraph
         {
             for (int z = 0; z < levelWidth; z++)
             {
-                graph[x, z] = new Node(new Vector3(x,0,z), 0); //TODO no cost implementation
+                graph[x, z] = new Node(new Vector3(x, 0, z), 0); //TODO no cost implementation
             }
         }
     }
@@ -47,13 +47,13 @@ public class LevelGraph
 
         foreach (Vector2 dir in directions)
         {
-            Vector2 v = new Vector2(dir.x, dir.y) + (Vector2) n.getNodePos();
+            Vector2 v = new Vector2(dir.x, dir.y) + new Vector2(n.getNodePos().x, n.getNodePos().z);
             bool doesExist = (v.x >= 0 && v.x < levelWidth && v.y >= 0 && v.y < levelLength) ? true : false;
             bool passable = false;
 
             if (doesExist)
             {
-                passable = graph[(int)v.x, (int)v.y].getCost() < Mathf.Infinity;
+                passable = graph[(int)v.x, (int)v.y].getCost() < float.PositiveInfinity; // TODO max cost value 
             }
 
             if (doesExist && passable)

@@ -10,8 +10,9 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         levelGraph = new LevelGraph(25, 25);
-        path = Pathfind.Astar(levelGraph, new Node(Vector3.zero, 0), new Node(new Vector3(19, 0, 23), 0));
-        Debug.Log(path.Count);
+        path = Pathfind.Astar(levelGraph, levelGraph.getGraph()[0,23], levelGraph.getGraph()[11, 0]);
+        // Debug.Log(levelGraph.getGraph()[0,0].getNodePos());
+        // Debug.Log(levelGraph.getGraph()[15,17].getNodePos());
     }
 
     // Update is called once per frame
