@@ -118,4 +118,9 @@ public class LevelGraph
     {
         return this.graph;
     }
+
+    public Node GetNode(int posX, int posY)
+    {
+        return this.graph[posX, posY];
+    }
 }
