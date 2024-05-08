@@ -9,11 +9,17 @@ public class LevelManager : MonoBehaviour
 
     private LevelGraph levelGraph; // TODO BAD!!!
     List<Node> path;
+    [SerializeField] private int levelWidth = 30;
+    [SerializeField] private int levelHeight = 30;
     // Start is called before the first frame update
+    void Awake() 
+    {
+        levelGraph = new LevelGraph(levelWidth, levelHeight);
+    }
+    
     void Start()
     {
         _debugGizmos = true;
-        // levelGraph = new LevelGraph(25, 25);
         path = Pathfind.Astar(levelGraph, levelGraph.GetNode(0,23), levelGraph.GetNode(11, 0));
 
         Debug.Log((levelGraph));
