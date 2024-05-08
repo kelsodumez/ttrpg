@@ -25,7 +25,7 @@ public class AgentSpawn : MonoBehaviour
     public GameObject SpawnAgent(Node spawnPos)
     {
         GameObject spawnedAgent = Instantiate(agent, Vector3.zero, Quaternion.identity);
-        spawnedAgent.GetComponent<AgentMove>().SetPos(spawnPos);
+        spawnedAgent.GetComponent<AgentMove>().SetPos(spawnPos, true);
         return spawnedAgent;
     }
 
