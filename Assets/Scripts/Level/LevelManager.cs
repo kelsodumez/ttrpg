@@ -7,7 +7,7 @@ public class LevelManager : MonoBehaviour
 {
     [SerializeField] private bool _debugGizmos;
 
-    private LevelGraph levelGraph = new LevelGraph(25,25); // TODO BAD!!!
+    private LevelGraph levelGraph; // TODO BAD!!!
     List<Node> path;
     // Start is called before the first frame update
     void Start()

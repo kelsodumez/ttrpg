@@ -6,17 +6,23 @@ using UnityEngine;
 
 public class LevelGraph
 {
-    private int levelLength;
-    private int levelWidth;
+    private static int levelLength;
+    private static int levelWidth;
     // private int levelHeight;
 
-    private Node[,] graph;
+    private static Node[,] graph;
 
-    public LevelGraph(int levelLength, int levelWidth)//, int levelHeight)
+    private static bool _isInitialised = false;
+
+    static LevelGraph()//, int levelHeight)
+    {
+
+    }
+
+    public void Initialise(int levelLength, int levelWidth)
     {
         setLevelLength(levelLength);
         setLevelWidth(levelWidth);
-        // setLevelHeight(levelHeight);
 
         graph = new Node[levelLength, levelWidth];
 
@@ -27,81 +33,92 @@ public class LevelGraph
                 graph[x, z] = new Node(new Vector3(x, 0, z), 0); //TODO no cost implementation
             }
         }
+
+        _isInitialised = true;
     }
 
     public List<Node> GetNeighbours(Node n)
     {
-        List<Node> neighbours = new List<Node>();
-
-        Vector2[] directions =
+        if (_isInitialised)
         {
-            new Vector2(-1, 0), // west
-            new Vector2(-1, 1), // north-west
-            new Vector2(0, 1),  // north
-            new Vector2(1, 1),  // north-east
-            new Vector2(1, 0),  // east
-            new Vector2(1, -1), // south-east
-            new Vector2(0, -1), // south
-            new Vector2(-1, -1) // south-west
-        };
+            List<Node> neighbours = new List<Node>();
 
-        foreach (Vector2 dir in directions)
-        {
-            Vector2 v = new Vector2(dir.x, dir.y) + new Vector2(n.getNodePos().x, n.getNodePos().z);
-            bool doesExist = (v.x >= 0 && v.x < levelWidth && v.y >= 0 && v.y < levelLength) ? true : false;
-            bool passable = false;
-
-            if (doesExist)
+            Vector2[] directions =
             {
-                passable = graph[(int)v.x, (int)v.y].getCost() < float.PositiveInfinity; // TODO max cost value 
-            }
+                new Vector2(-1, 0), // west
+                new Vector2(-1, 1), // north-west
+                new Vector2(0, 1),  // north
+                new Vector2(1, 1),  // north-east
+                new Vector2(1, 0),  // east
+                new Vector2(1, -1), // south-east
+                new Vector2(0, -1), // south
+                new Vector2(-1, -1) // south-west
+            };
 
-            if (doesExist && passable)
+            foreach (Vector2 dir in directions)
             {
-                neighbours.Add(graph[(int)v.x, (int)v.y]);
+                Vector2 v = new Vector2(dir.x, dir.y) + new Vector2(n.getNodePos().x, n.getNodePos().z);
+                bool doesExist = (v.x >= 0 && v.x < levelWidth && v.y >= 0 && v.y < levelLength) ? true : false;
+                bool passable = false;
+
+                if (doesExist)
+                {
+                    passable = graph[(int)v.x, (int)v.y].getCost() < float.PositiveInfinity; // TODO max cost value 
+                }
+
+                if (doesExist && passable)
+                {
+                    neighbours.Add(graph[(int)v.x, (int)v.y]);
+                }
             }
+            return neighbours;
         }
-        return neighbours;
+        else Debug.Log("LevelGraph Unitialised!"); return null;        
     }
 
     public float NextMinimumCost(Node n)
     {
-        float minCost = float.PositiveInfinity;
-
-        for (int index = 0; index < 8; index++)
+        if (_isInitialised)
         {
-            List<Node> neighbours = GetNeighbours(n);
-            Vector3 centreNode = n.getNodePos();
+            float minCost = float.PositiveInfinity;
 
-            foreach (Node neighbour in neighbours)
+            for (int index = 0; index < 8; index++)
             {
-                if (neighbour.getCost() < minCost)
+                List<Node> neighbours = GetNeighbours(n);
+                Vector3 centreNode = n.getNodePos();
+
+                foreach (Node neighbour in neighbours)
                 {
-                    minCost = neighbour.getCost();
+                    if (neighbour.getCost() < minCost)
+                    {
+                        minCost = neighbour.getCost();
+                    }
                 }
             }
+            return minCost + 1;
         }
-        return minCost + 1;
+        else Debug.Log("LevelGraph Unitialised!"); return 0;        
     }
     
-    public void setLevelLength(int newLength)
+    public static void setLevelLength(int newLength)
     {
-        this.levelLength = newLength;
+        levelLength = newLength;
     }
 
-    public int getLevelLength()
+    public static int getLevelLength()
     {
-        return this.levelLength;
+        if (_isInitialised) return levelLength;
+        else Debug.Log("LevelGraph Unitialized!"); return 0;
     }
 
-    public void setLevelWidth(int newWidth)
+    public static void setLevelWidth(int newWidth)
     {
-        this.levelWidth = newWidth;
+        levelWidth = newWidth;
     }
 
-    public int getLevelWidth()
+    public static int getLevelWidth()
     {
-        return this.levelWidth;
+        return levelWidth;
     }
 
     // public void setLevelHeight(int newHeight)
@@ -114,13 +131,13 @@ public class LevelGraph
     //     return this.levelHeight;
     // }
 
-    public Node[,] getGraph()
+    public static Node[,] getGraph()
     {
-        return this.graph;
+        return graph;
     }
 
-    public Node GetNode(int posX, int posY)
+    public static Node GetNode(int posX, int posY)
     {
-        return this.graph[posX, posY];
+        return graph[posX, posY];
     }
 }
