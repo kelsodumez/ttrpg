@@ -12,8 +12,6 @@ public class LevelGraph
 
     private static Node[,] graph;
 
-    private static bool _isInitialised = false;
-
     public LevelGraph(int levelLength, int levelWidth)
     {
         setLevelLength(levelLength);

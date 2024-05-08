@@ -12,23 +12,20 @@ public class AgentSpawn : MonoBehaviour
     void Start()
     {
         levelManager = GameObject.Find("Level Manager").GetComponent<LevelManager>();
-        lGraph = levelManager.GetLevelGraph();
-
-        Debug.Log((lGraph));
+        lGraph = levelManager.GetInstanceLevelGraph();
+        SpawnAgent(lGraph.GetNode(15, 15));
 
 
     }
     void Update()
     {
-        GameObject spawnedAgent = SpawnAgent(lGraph.GetNode(0, 0));
-        spawnedAgent.GetComponent<AgentMove>().MoveAgent(lGraph.GetNode(10,0));
+
     }
 
     public GameObject SpawnAgent(Node spawnPos)
     {
-        Debug.Log("reach");
-        GameObject spawnedAgent = Instantiate(agent, spawnPos.getNodePos(), Quaternion.identity);
-        Debug.Log(spawnedAgent);
+        GameObject spawnedAgent = Instantiate(agent, Vector3.zero, Quaternion.identity);
+        spawnedAgent.GetComponent<AgentMove>().SetPos(spawnPos);
         return spawnedAgent;
     }
 

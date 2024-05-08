@@ -11,7 +11,7 @@ public class AgentMove : MonoBehaviour
     void Start() 
     {
         levelManager = GameObject.Find("Level Manager").GetComponent<LevelManager>();
-        lGraph = levelManager.GetLevelGraph();
+        lGraph = levelManager.GetInstanceLevelGraph();
 
     }
     
@@ -25,7 +25,7 @@ public class AgentMove : MonoBehaviour
         return agentPos;
     }
 
-    private void SetPos(Node pos)
+    public void SetPos(Node pos)
     {
         transform.position = pos.getNodePos();
         agentPos = pos;

@@ -20,7 +20,6 @@ public class Pathfind
         accumulatedCost.Add(startNode, 0);
 
         Node currentNode = new Node(Vector3.zero, 0);
-        // Debug.Log(goalNode.getNodePos());
 
         while (nodesToVisit.Count > 0)
         {

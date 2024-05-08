@@ -21,8 +21,6 @@ public class LevelManager : MonoBehaviour
     {
         _debugGizmos = true;
         path = Pathfind.Astar(levelGraph, levelGraph.GetNode(0,23), levelGraph.GetNode(11, 0));
-
-        Debug.Log((levelGraph));
     }
 
     // Update is called once per frame
@@ -31,7 +29,7 @@ public class LevelManager : MonoBehaviour
 
     }
     
-    public LevelGraph GetLevelGraph()
+    public LevelGraph GetInstanceLevelGraph()
     {
         if (this.levelGraph is not null)
         {
