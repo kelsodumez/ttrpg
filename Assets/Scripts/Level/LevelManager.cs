@@ -49,7 +49,14 @@ public class LevelManager : MonoBehaviour
         Gizmos.color = Color.white;
         foreach (Node node in levelGraph.getGraph())
         {
+            if (node.getCost() == float.PositiveInfinity)
+            {
+                Gizmos.color = Color.red;
+            }
             Gizmos.DrawSphere(node.getNodePos(), 0.25f);
+            Gizmos.color = Color.white;
+
+            
         }
         Gizmos.color = Color.blue;
         foreach (Node node in path)

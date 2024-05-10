@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Node
 {
     private Vector3 nodePos;
     private float cost;
+    private GameObject content; 
 
     public Node(Vector3 nodePos, float cost)
     {
@@ -31,5 +33,23 @@ public class Node
     public float getCost()
     {
         return this.cost;
+    }
+
+    public void SetContent(GameObject newContent)
+    {
+        if (content is null)
+        {
+            content = newContent;
+        }
+    }
+
+    public void ClearContent()
+    {
+        content = null;
+    }
+
+    public GameObject GetContent()
+    {
+        return content;
     }
 }

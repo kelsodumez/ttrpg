@@ -40,6 +40,7 @@ public class AgentMove : MonoBehaviour
         {
             
         }
+        pos.SetContent(gameObject);
     }
 
     public void MoveAgent(Node goalPos)
