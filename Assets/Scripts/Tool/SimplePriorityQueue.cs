@@ -8,6 +8,9 @@ namespace Priority_Queue
     /// A simplified priority queue implementation.  Is stable, auto-resizes, and thread-safe, at the cost of being slightly slower than
     /// FastPriorityQueue
     /// Methods tagged as O(1) or O(log n) are assuming there are no duplicates.  Duplicates may increase the algorithmic complexity.
+    /// 
+    /// 
+    /// modified by Kelso du Mez to | 12/05/2024
     /// </summary>
     /// <typeparam name="TItem">The type to enqueue</typeparam>
     /// <typeparam name="TPriority">The priority-type to use for nodes.  Must extend IComparable&lt;TPriority&gt;</typeparam>
@@ -213,6 +216,21 @@ namespace Priority_Queue
                 SimpleNode node = _queue.Dequeue();
                 RemoveFromNodeCache(node);
                 return node.Data;
+            }
+        }
+
+        public (TItem, TPriority) DequeueWithPriority()
+        {
+            lock (_queue)
+            {
+                if (_queue.Count <= 0)
+                {
+                    throw new InvalidOperationException("womp womp");
+                }
+
+                SimpleNode node = _queue.Dequeue();
+                RemoveFromNodeCache(node);
+                return (node.Data, node.Priority);
             }
         }
 
@@ -557,6 +575,20 @@ namespace Priority_Queue
                 // Check queue structure itself
                 return _queue.IsValidQueue();
             }
+        }
+
+        public void AdjustPriorities(TPriority add)
+        {
+            lock(_queue)
+            {
+                foreach (var node in _queue)
+                {
+                    dynamic a = node.Priority;
+                    dynamic b = add;
+                    UpdatePriority(node.Data, a + b);
+                }
+            }
+
         }
     }
 

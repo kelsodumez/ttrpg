@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class LevelManager : MonoBehaviour
 {
@@ -11,6 +12,11 @@ public class LevelManager : MonoBehaviour
     List<Node> path;
     [SerializeField] private int levelWidth = 30;
     [SerializeField] private int levelHeight = 30;
+
+    private TimeSchedule _timeSchedule = new();
+
+    [SerializeField] private GameObject _player;
+
     // Start is called before the first frame update
     void Awake() 
     {
@@ -20,13 +26,20 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         _debugGizmos = true;
-        path = Pathfind.Astar(levelGraph, levelGraph.GetNode(0,23), levelGraph.GetNode(11, 0));
+        _timeSchedule.ScheduleEvent(_player, 10); // TODO add speed variable for player
     }
 
     // Update is called once per frame
     void Update()
     {
+        HandleTurns();
+    }
 
+    public void HandleTurns()
+    {
+        GameObject nextMove = _timeSchedule.NextEvent();
+        // TODO add stuff for 'unpausing' characters when its their turn
+        _timeSchedule.ScheduleEvent(nextMove);
     }
     
     public LevelGraph GetInstanceLevelGraph()
@@ -44,7 +57,7 @@ public class LevelManager : MonoBehaviour
 
     private void OnDrawGizmos() 
     {
-        if (!_debugGizmos) { return;}
+        if (!_debugGizmos) return;
 
         Gizmos.color = Color.white;
         foreach (Node node in levelGraph.getGraph())
@@ -58,10 +71,10 @@ public class LevelManager : MonoBehaviour
 
             
         }
-        Gizmos.color = Color.blue;
-        foreach (Node node in path)
-        {
-            Gizmos.DrawSphere(node.getNodePos(), 0.3f);
-        }
+        // Gizmos.color = Color.blue;
+        // foreach (Node node in path)
+        // {
+        //     Gizmos.DrawSphere(node.getNodePos(), 0.3f);
+        // }
     }
 }

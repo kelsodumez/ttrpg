@@ -7,6 +7,9 @@ public class PlayerInput : MonoBehaviour
 {
     private LevelManager levelManager;
     private LevelGraph lGraph;
+    private bool moveSelected = false;
+    private AgentMove agentMove;
+    bool playerTurn = false;
 
     private float enter = 0.0f;
     Plane nPlane = new Plane(Vector3.up, Vector3.zero);
@@ -14,17 +17,32 @@ public class PlayerInput : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        agentMove = gameObject.GetComponent<AgentMove>();
         levelManager = GameObject.Find("Level Manager").GetComponent<LevelManager>();
         lGraph = levelManager.GetInstanceLevelGraph();
+
+        agentMove.SetPos(lGraph.GetNode((int) transform.position.x, (int) transform.position.z), true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (playerTurn && moveSelected)
         {
-            Node hitNode = SelectNode();
+            // TODO enable visual element for selecting where to move, knowing allowance, etc.
+            if (Input.GetMouseButtonDown(0))
+            {
+                Node hitNode = SelectNode();
+                agentMove.MoveAgent(hitNode);
+                
+            }
         }
+
+    }
+
+    public void Move()
+    {
+        moveSelected = true;
     }
 
     private Node SelectNode()
@@ -34,7 +52,7 @@ public class PlayerInput : MonoBehaviour
         if (nPlane.Raycast(rayOrigin, out enter))
         {
             Vector3 hitPoint = rayOrigin.GetPoint(enter);
-            Debug.Log($"aa{hitPoint}");
+            Debug.Log($"{hitPoint}");
             Node hitNode = lGraph.GetNode(Mathf.RoundToInt(hitPoint.x), Mathf.RoundToInt(hitPoint.z));
             return hitNode;
         }

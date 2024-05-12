@@ -46,10 +46,11 @@ public class AgentMove : MonoBehaviour
     public void MoveAgent(Node goalPos)
     {
         List<Node> path = Pathfind.Astar(lGraph, agentPos, goalPos);
+        // Debug.Log(goalPos.getNodePos());
         foreach (Node node in path)
         {
             //TODO need to wait for full traversal between nodes before going to next node
-            SetPos(node, false);
+            SetPos(node, true);
         }
     }
 }
