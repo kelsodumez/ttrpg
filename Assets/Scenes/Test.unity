@@ -862,6 +862,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -2528404950254428691, guid: ca60337a5b8e8e24dafe9b67981ff6b2, type: 3}
+      propertyPath: _playerSpeed
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 868160704268491866, guid: ca60337a5b8e8e24dafe9b67981ff6b2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 14.8
@@ -968,8 +972,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _debugGizmos: 0
-  levelWidth: 30
-  levelHeight: 30
+  levelWidth: 50
+  levelHeight: 50
 --- !u!114 &1880815541
 MonoBehaviour:
   m_ObjectHideFlags: 0

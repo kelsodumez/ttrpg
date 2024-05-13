@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : MonoBehaviour, IActor
 {
     private LevelManager levelManager;
     private LevelGraph lGraph;
     private bool moveSelected = false;
     private AgentMove agentMove;
     bool playerTurn = false;
+    bool waitingToSelect = true;
 
     private float enter = 0.0f;
     Plane nPlane = new Plane(Vector3.up, Vector3.zero);
+    [SerializeField] private float _playerSpeed = 1f;
 
     // Start is called before the first frame update
     void Start()
@@ -22,41 +26,72 @@ public class PlayerInput : MonoBehaviour
         lGraph = levelManager.GetInstanceLevelGraph();
 
         agentMove.SetPos(lGraph.GetNode((int) transform.position.x, (int) transform.position.z), true);
+        RegisterSelf();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerTurn && moveSelected)
+
+        // waitingToSelect = false;
+        // // TODO enable visual element for selecting where to move, knowing allowance, etc.
+        if (playerTurn && waitingToSelect)
         {
-            // TODO enable visual element for selecting where to move, knowing allowance, etc.
             if (Input.GetMouseButtonDown(0))
             {
+                Debug.Log($"player turn");
                 Node hitNode = SelectNode();
-                agentMove.MoveAgent(hitNode);
-                
+                List<Node> path = Pathfind.Astar(lGraph, agentMove.GetAgentPos(), hitNode);
+                if (path.Count <= _playerSpeed * 10)
+                {
+                    agentMove.MoveAgent(hitNode);
+                    waitingToSelect = false;
+                    Pause();
+                }
             }
         }
-
     }
 
-    public void Move()
+        // Pause();
+
+    public void RegisterSelf()
     {
-        moveSelected = true;
+        TurnManager.RegisterActor(this, _playerSpeed);
     }
+
+    public void Unpause()
+    {
+        playerTurn = true;
+    }
+
+    public void Pause()
+    {
+        playerTurn = false;
+        waitingToSelect = true;
+        NextActorTurn();
+    }
+
 
     private Node SelectNode()
     {
-        RaycastHit hit;
         Ray rayOrigin = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (nPlane.Raycast(rayOrigin, out enter))
         {
             Vector3 hitPoint = rayOrigin.GetPoint(enter);
-            Debug.Log($"{hitPoint}");
+            // Debug.Log($"{hitPoint}");
             Node hitNode = lGraph.GetNode(Mathf.RoundToInt(hitPoint.x), Mathf.RoundToInt(hitPoint.z));
             return hitNode;
         }
         return null;
     }
 
+    public void NextActorTurn()
+    {
+        TurnManager.NextActorTurn();
+    }
+
+    public float GetActorSpeed()
+    {
+        return _playerSpeed;
+    }
 }

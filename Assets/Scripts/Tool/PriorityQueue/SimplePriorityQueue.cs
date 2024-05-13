@@ -577,19 +577,19 @@ namespace Priority_Queue
             }
         }
 
-        public void AdjustPriorities(TPriority add)
-        {
-            lock(_queue)
-            {
-                foreach (var node in _queue)
-                {
-                    dynamic a = node.Priority;
-                    dynamic b = add;
-                    UpdatePriority(node.Data, a + b);
-                }
-            }
+        // public void AdjustPriorities(TPriority add)
+        // {
+        //     lock(_queue)
+        //     {
+        //         foreach (var node in _queue)
+        //         {
+        //             dynamic a = node.Priority;
+        //             dynamic b = add;
+        //             UpdatePriority(node.Data, a + b);
+        //         }
+        //     }
 
-        }
+        // }
     }
 
     /// <summary>

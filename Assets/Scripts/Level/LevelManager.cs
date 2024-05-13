@@ -13,9 +13,8 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private int levelWidth = 30;
     [SerializeField] private int levelHeight = 30;
 
-    private TimeSchedule _timeSchedule = new();
 
-    [SerializeField] private GameObject _player;
+    // [SerializeField] private IActor _player;
 
     // Start is called before the first frame update
     void Awake() 
@@ -26,21 +25,15 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         _debugGizmos = true;
-        _timeSchedule.ScheduleEvent(_player, 10); // TODO add speed variable for player
+        TurnManager.Init();
     }
 
     // Update is called once per frame
     void Update()
     {
-        HandleTurns();
+
     }
 
-    public void HandleTurns()
-    {
-        GameObject nextMove = _timeSchedule.NextEvent();
-        // TODO add stuff for 'unpausing' characters when its their turn
-        _timeSchedule.ScheduleEvent(nextMove);
-    }
     
     public LevelGraph GetInstanceLevelGraph()
     {

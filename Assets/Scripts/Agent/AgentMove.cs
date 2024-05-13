@@ -10,7 +10,6 @@ public class AgentMove : MonoBehaviour
     [SerializeField] float moveTime = .1f;
     [SerializeField] float moveLerpRate = .1f;
 
-    private bool destReached = false;
 
     void Start() 
     {
@@ -41,6 +40,10 @@ public class AgentMove : MonoBehaviour
             
         }
         pos.SetContent(gameObject);
+    }
+    public Node GetAgentPos()
+    {
+        return agentPos;
     }
 
     public void MoveAgent(Node goalPos)

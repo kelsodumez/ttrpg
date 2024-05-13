@@ -14,6 +14,7 @@ public class AgentSpawn : MonoBehaviour
         levelManager = GameObject.Find("Level Manager").GetComponent<LevelManager>();
         lGraph = levelManager.GetInstanceLevelGraph();
         SpawnAgent(lGraph.GetNode(15, 15));
+        SpawnAgent(lGraph.GetNode(10, 10));
 
 
     }
@@ -26,6 +27,7 @@ public class AgentSpawn : MonoBehaviour
     {
         GameObject spawnedAgent = Instantiate(agent, Vector3.zero, Quaternion.identity);
         spawnedAgent.GetComponent<AgentMove>().SetPos(spawnPos, true);
+        spawnedAgent.GetComponent<AgentBrain>().Init();
         return spawnedAgent;
     }
 
