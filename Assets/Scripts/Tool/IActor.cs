@@ -6,5 +6,5 @@ public interface IActor
     void Pause();
     void RegisterSelf();
     void NextActorTurn();
-    float GetActorSpeed();
+    float GetActorInititiative();
 }

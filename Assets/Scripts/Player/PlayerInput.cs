@@ -16,11 +16,12 @@ public class PlayerInput : MonoBehaviour, IActor
 
     private float enter = 0.0f;
     Plane nPlane = new Plane(Vector3.up, Vector3.zero);
-    [SerializeField] private float _playerSpeed = 1f;
-
+    private AgentStats _playerStats;
     // Start is called before the first frame update
     void Start()
     {
+        _playerStats = transform.GetComponent<AgentStats>();
+
         agentMove = gameObject.GetComponent<AgentMove>();
         levelManager = GameObject.Find("Level Manager").GetComponent<LevelManager>();
         lGraph = levelManager.GetInstanceLevelGraph();
@@ -42,7 +43,7 @@ public class PlayerInput : MonoBehaviour, IActor
                 Debug.Log($"player turn");
                 Node hitNode = SelectNode();
                 List<Node> path = Pathfind.Astar(lGraph, agentMove.GetAgentPos(), hitNode);
-                if (path.Count <= _playerSpeed * 10)
+                if (path.Count <= _playerStats.getStat(AgentStats._stats._moveSpeed) * 10)
                 {
                     agentMove.MoveAgent(hitNode);
                     waitingToSelect = false;
@@ -56,7 +57,7 @@ public class PlayerInput : MonoBehaviour, IActor
 
     public void RegisterSelf()
     {
-        TurnManager.RegisterActor(this, _playerSpeed);
+        TurnManager.RegisterActor(this, _playerStats.getStat(AgentStats._stats._inititiative));
     }
 
     public void Unpause()
@@ -90,8 +91,8 @@ public class PlayerInput : MonoBehaviour, IActor
         TurnManager.NextActorTurn();
     }
 
-    public float GetActorSpeed()
+    public float GetActorInititiative()
     {
-        return _playerSpeed;
+        return _playerStats.getStat(AgentStats._stats._inititiative);
     }
 }

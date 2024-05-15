@@ -18,7 +18,7 @@ public static class TurnManager
         // TODO add stuff for 'unpausing' characters when its their turn
         nextActor.Unpause();
 
-        _timeSchedule.ScheduleEvent(nextActor, nextActor.GetActorSpeed());
+        _timeSchedule.ScheduleEvent(nextActor, nextActor.GetActorInititiative());
     }
 
     public static void RegisterActor(IActor actor, float delay)
