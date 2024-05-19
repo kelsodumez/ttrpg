@@ -60,6 +60,9 @@ public class AgentBrain : MonoBehaviour, IActor
 
     private void DecideAction()
     {
+        Debug.Log($"{this.name} turn");
+        //todo check if player discovered
+        //todo do a visual check for player with frustums n shit
         if (GetPlayerDistance() < _safeDistance)
         {
             SeekDistanceFromPoint(_player.transform.position, _safeDistance);
@@ -68,18 +71,17 @@ public class AgentBrain : MonoBehaviour, IActor
 
     private void SeekDistanceFromPoint(Vector3 point, float dist)
     {
-        for (int i =0; i < 360; i++)
-        {
-            if (Mathf.RoundToInt(point.x+dist*Mathf.Cos(Mathf.Deg2Rad * i)) == point.x)
-            {
-                Debug.Log(i);
-            }
-        }
+        //normally is dest - orig, need to do orig - dist for opp direction
+        Vector3 oppositeDirection = (transform.position - point).normalized;
+        //get distance between point and object, subtract it from distance to find the distance required to travel
+        Debug.Log(oppositeDirection);
+        NavigateTo(oppositeDirection);
+
     }
 
-    private void NavigateTo()
+    private void NavigateTo(Vector3 point)
     {
-        Debug.Log($"{this.name} turn");
-        // _agentMove.MoveAgent()
+        Node node = lGraph.GetNode((int) point.x, (int) point.z);
+        _agentMove.MoveAgent(node);
     }
 }

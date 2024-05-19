@@ -972,8 +972,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _debugGizmos: 0
-  levelWidth: 50
-  levelHeight: 50
+  levelWidth: 100
+  levelHeight: 100
 --- !u!114 &1880815541
 MonoBehaviour:
   m_ObjectHideFlags: 0
