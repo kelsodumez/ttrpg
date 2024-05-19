@@ -61,21 +61,41 @@ public class AgentBrain : MonoBehaviour, IActor
     private void DecideAction()
     {
         Debug.Log($"{this.name} turn");
-        //todo check if player discovered
-        //todo do a visual check for player with frustums n shit
+        //TODO check if player discovered
+        //TODO do a visual check for player with frustums n shit
+        //TODO patrol 
+        bool cornered = true;
         if (GetPlayerDistance() < _safeDistance)
         {
-            SeekDistanceFromPoint(_player.transform.position, _safeDistance);
+            cornered = SeekDistanceFromPoint(_player.transform.position, _safeDistance);
+        }
+
+        //TODO close distance
+
+        if (cornered == true)
+        {
+            //TODO SHOOT!
         }
     }
 
-    private void SeekDistanceFromPoint(Vector3 point, float dist)
+    private bool SeekDistanceFromPoint(Vector3 point, float dist)
     {
         //normally is dest - orig, need to do orig - dist for opp direction
-        Vector3 oppositeDirection = (transform.position - point).normalized;
+        Vector3 oppositeDirection = _agentMove.getNode().getNodePos() - lGraph.GetNode((int) point.x, (int) point.z).getNodePos();
+        float distDiff = Mathf.Abs(dist - Vector3.Distance(_agentMove.getNode().getNodePos(), lGraph.GetNode((int) point.x, (int) point.z).getNodePos()));
         //get distance between point and object, subtract it from distance to find the distance required to travel
-        Debug.Log(oppositeDirection);
-        NavigateTo(oppositeDirection);
+        Debug.Log(oppositeDirection * distDiff);
+        Vector3 runTo = oppositeDirection * distDiff;
+        // TODO check if node valid
+        if (lGraph.InLevelGraph((int)runTo.x, (int)runTo.z))
+        {
+            NavigateTo(runTo);
+            return false;
+        }
+        else
+        {
+            return true;
+        }
 
     }
 

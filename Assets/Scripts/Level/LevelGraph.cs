@@ -123,4 +123,17 @@ public class LevelGraph
     {
         return graph[posX, posY];
     }
+
+    public bool InLevelGraph(int posX, int posY)
+    {
+        try
+        {
+            GetNode(posX, posY);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }
