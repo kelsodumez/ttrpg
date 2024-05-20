@@ -14,6 +14,7 @@ public class AgentBrain : MonoBehaviour, IActor
     private AgentStats _agentStats;
     private GameObject _player;
     [SerializeField] private float _safeDistance = 5f;
+    [SerializeField] private float _maxDistance = 10f;
 
     public float GetActorInititiative()
     {
@@ -62,6 +63,7 @@ public class AgentBrain : MonoBehaviour, IActor
     {
         Debug.Log($"{this.name} turn");
         //TODO check if player discovered
+
         //TODO do a visual check for player with frustums n shit
         //TODO patrol 
         bool cornered = true;
@@ -69,12 +71,27 @@ public class AgentBrain : MonoBehaviour, IActor
         {
             cornered = SeekDistanceFromPoint(_player.transform.position, _safeDistance);
         }
-
+        else if (GetPlayerDistance() > _maxDistance)
+        {
+            CloseDistance(_player.transform.position, _safeDistance);
+        }
         //TODO close distance
 
         if (cornered == true)
         {
             //TODO SHOOT!
+        }
+    }
+
+    private void CloseDistance(Vector3 point, float dist)
+    {
+        Node pointNode = lGraph.GetNode((int) point.x, (int) point.z);
+        Vector3 pointDirection = (pointNode.getNodePos() - transform.position).normalized;
+        Vector3 runTO = pointDirection * dist;
+        if (lGraph.InLevelGraph((int) runTO.x, (int) runTO.z))
+        {
+            Debug.Log("hello");
+            NavigateTo(runTO);
         }
     }
 
@@ -92,11 +109,7 @@ public class AgentBrain : MonoBehaviour, IActor
             NavigateTo(runTo);
             return false;
         }
-        else
-        {
-            return true;
-        }
-
+        return true;
     }
 
     private void NavigateTo(Vector3 point)
