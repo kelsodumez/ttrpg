@@ -114,7 +114,12 @@ public class AgentBrain : MonoBehaviour, IActor
 
     private void NavigateTo(Vector3 point)
     {
-        Node node = lGraph.GetNode((int) point.x, (int) point.z);
-        _agentMove.MoveAgent(node);
+        Node goalNode = lGraph.GetNode((int) point.x, (int) point.z);
+        List<Node> path = Pathfind.Astar(lGraph, _agentMove.getNode(), goalNode);
+        if (path.Count > _agentStats.getStat(AgentStats._stats._moveSpeed))
+        {
+            goalNode = path[(int) AgentStats._stats._moveSpeed];
+        }
+        _agentMove.MoveAgent(goalNode);
     }
 }

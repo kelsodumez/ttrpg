@@ -23,7 +23,22 @@ public class LevelGraph
         {
             for (int z = 0; z < levelWidth; z++)
             {
-                graph[x, z] = new Node(new Vector3(x, 0, z), 0); //TODO no cost implementation
+                graph[x, z] = new Node(new Vector3(x, 0, z), 0); 
+            }
+        }
+
+        foreach (Node node in graph)
+        {
+            Vector3 nodePos = node.getNodePos();
+            Vector3 belowNodePos = new (nodePos.x, nodePos.y-3f, nodePos.z);
+            // Debug.Log(belowNodePos);
+            RaycastHit hit;
+            if (Physics.SphereCast(belowNodePos, 1f, Vector3.up, out hit, 3f))
+            {
+                if (hit.collider.CompareTag("Impassable"))
+                {
+                    node.setCost(float.PositiveInfinity);
+                }   
             }
         }
     }
