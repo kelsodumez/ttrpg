@@ -26,7 +26,7 @@ public class PlayerInput : MonoBehaviour, IActor
         levelManager = GameObject.Find("Level Manager").GetComponent<LevelManager>();
         lGraph = levelManager.GetInstanceLevelGraph();
 
-        agentMove.SetPos(lGraph.GetNode((int) transform.position.x, (int) transform.position.z), true);
+        agentMove.SetPos(lGraph.GetNode((int) transform.position.x, (int) transform.position.z));
         RegisterSelf();
     }
 

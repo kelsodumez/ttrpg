@@ -7,7 +7,7 @@ public class AgentMove : MonoBehaviour
     private Node agentPos;
     private LevelManager levelManager;
     private LevelGraph lGraph;
-    [SerializeField] float moveTime = .1f;
+    [SerializeField] float moveTime = 5f;
     [SerializeField] float moveLerpRate = .1f;
 
 
@@ -20,7 +20,7 @@ public class AgentMove : MonoBehaviour
     
     public AgentMove(Node startPos)
     {
-        SetPos(startPos, true);
+        SetPos(startPos);
     }
 
     public Node getNode()
@@ -28,19 +28,6 @@ public class AgentMove : MonoBehaviour
         return agentPos;
     }
 
-    public void SetPos(Node pos, bool instant)
-    {
-        if (instant)
-        {
-            transform.position = pos.getNodePos();
-            agentPos = pos;
-        }
-        else
-        {
-            
-        }
-        pos.SetContent(gameObject);
-    }
     public Node GetAgentPos()
     {
         return agentPos;
@@ -50,10 +37,41 @@ public class AgentMove : MonoBehaviour
     {
         List<Node> path = Pathfind.Astar(lGraph, agentPos, goalPos);
         // Debug.Log(goalPos.getNodePos());
-        foreach (Node node in path)
+
+        Debug.Log("reach");
+        Debug.Log("started");
+        StartCoroutine(LerpThroughNode(path));
+        Debug.Log("finished");
+        agentPos = goalPos;
+    }
+
+    public void SetPos(Node newPos)
+    {        
+        transform.position = newPos.getNodePos();
+        agentPos = newPos;
+    }
+
+    IEnumerator LerpThroughNode(List<Node> path)
+    {
+        float timer = 0;
+        Vector3 prevPos = transform.position;
+
+        while (path.Count > 0)
         {
-            //TODO need to wait for full traversal between nodes before going to next node
-            SetPos(node, true);
+            timer += Time.deltaTime;
+            transform.position = Vector3.Lerp(prevPos, path[0].getNodePos(), timer);
+            // Debug.Log(path.IndexOf(currentNode)/timer);
+            if (timer > 1)
+            {
+                timer = 0;
+                prevPos = path[0].getNodePos();
+                path.RemoveAt(0);
+      
+            }            // Debug.Log(path.IndexOf(currentNode));
+            // Debug.Log(timer/5);
+            yield return new WaitForEndOfFrame();
         }
     }
+
+
 }
