@@ -154,8 +154,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94daf915f381e894db25a5ade77a7164, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTime: 0
-  moveLerpRate: 0
 --- !u!114 &6508250532508697680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,7 +166,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c963a0efd313dd49bd60a7f4721aba0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _agentSpeed: 6
+  _safeDistance: 5
+  _maxDistance: 10
 --- !u!114 &2581277944657455414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,5 +181,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hitPoints: 15
-  _moveSpeed: 5
-  _initiative: 5
+  _moveSpeed: 10
+  _initiative: 10

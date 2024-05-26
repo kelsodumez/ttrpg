@@ -15,6 +15,8 @@ public class AgentBrain : MonoBehaviour, IActor
     private GameObject _player;
     [SerializeField] private float _safeDistance = 5f;
     [SerializeField] private float _maxDistance = 10f;
+    [SerializeField] private Node[] patrolNodes;
+    private bool playerFound = false;
 
     public float GetActorInititiative()
     {
@@ -50,7 +52,8 @@ public class AgentBrain : MonoBehaviour, IActor
     {
         // agentTurn = true;
         DecideAction();
-        Pause();
+        // Pause();
+
         // TODO dont need bool, decide movement -> move -> attack
     }
 
@@ -66,23 +69,37 @@ public class AgentBrain : MonoBehaviour, IActor
 
         //TODO do a visual check for player with frustums n shit
         //TODO patrol 
-        bool cornered = true;
-        if (GetPlayerDistance() < _safeDistance)
+        if (playerFound)
         {
-            cornered = SeekDistanceFromPoint(_player.transform.position, _safeDistance);
-        }
-        else if (GetPlayerDistance() > _maxDistance)
-        {
-            CloseDistance(_player.transform.position, _safeDistance);
-        }
-        //TODO close distance
+            bool cornered = true;
+            if (GetPlayerDistance() < _safeDistance)
+            {
+                cornered = SeekDistanceFromPoint(_player.transform.position, _safeDistance);
+            }
+            else if (GetPlayerDistance() > _maxDistance)
+            {
+                CloseDistance(_player.transform.position, _safeDistance);
+            }
+            //TODO close distance
 
-        if (cornered == true)
-        {
-            //TODO SHOOT!
+            if (cornered == true)
+            {
+                //TODO SHOOT!
+            }
+            Pause();
         }
+        else
+        {
+            //TODO if view frustum check for player
+            Patrol();
+        }
+
     }
 
+    private void Patrol()
+    {
+
+    }
     private void CloseDistance(Vector3 point, float dist)
     {
         Node pointNode = lGraph.GetNode((int) point.x, (int) point.z);
@@ -101,7 +118,7 @@ public class AgentBrain : MonoBehaviour, IActor
         Vector3 oppositeDirection = _agentMove.getNode().getNodePos() - lGraph.GetNode((int) point.x, (int) point.z).getNodePos();
         float distDiff = Mathf.Abs(dist - Vector3.Distance(_agentMove.getNode().getNodePos(), lGraph.GetNode((int) point.x, (int) point.z).getNodePos()));
         //get distance between point and object, subtract it from distance to find the distance required to travel
-        Debug.Log(oppositeDirection * distDiff);
+        // Debug.Log(oppositeDirection * distDiff);
         Vector3 runTo = oppositeDirection * distDiff;
         // TODO check if node valid
         if (lGraph.InLevelGraph((int)runTo.x, (int)runTo.z))

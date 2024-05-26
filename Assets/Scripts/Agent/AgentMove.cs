@@ -7,12 +7,13 @@ public class AgentMove : MonoBehaviour
     private Node agentPos;
     private LevelManager levelManager;
     private LevelGraph lGraph;
-    [SerializeField] float moveTime = 5f;
-    [SerializeField] float moveLerpRate = .1f;
+    private float moveLerpRate;
 
 
     void Start() 
     {
+        moveLerpRate = 2f;
+        Debug.Log(moveLerpRate);
         levelManager = GameObject.Find("Level Manager").GetComponent<LevelManager>();
         lGraph = levelManager.GetInstanceLevelGraph();
 
@@ -36,12 +37,7 @@ public class AgentMove : MonoBehaviour
     public void MoveAgent(Node goalPos)
     {
         List<Node> path = Pathfind.Astar(lGraph, agentPos, goalPos);
-        // Debug.Log(goalPos.getNodePos());
-
-        Debug.Log("reach");
-        Debug.Log("started");
         StartCoroutine(LerpThroughNode(path));
-        Debug.Log("finished");
         agentPos = goalPos;
     }
 
@@ -58,19 +54,18 @@ public class AgentMove : MonoBehaviour
 
         while (path.Count > 0)
         {
-            timer += Time.deltaTime;
+            timer += Time.deltaTime * moveLerpRate;
             transform.position = Vector3.Lerp(prevPos, path[0].getNodePos(), timer);
-            // Debug.Log(path.IndexOf(currentNode)/timer);
             if (timer > 1)
             {
                 timer = 0;
                 prevPos = path[0].getNodePos();
                 path.RemoveAt(0);
       
-            }            // Debug.Log(path.IndexOf(currentNode));
-            // Debug.Log(timer/5);
+            }           
             yield return new WaitForEndOfFrame();
         }
+        transform.GetComponent<IActor>().Pause();
     }
 
 

@@ -43,11 +43,13 @@ public class PlayerInput : MonoBehaviour, IActor
                 Debug.Log($"player turn");
                 Node hitNode = SelectNode();
                 List<Node> path = Pathfind.Astar(lGraph, agentMove.GetAgentPos(), hitNode);
-                if (path.Count <= _playerStats.getStat(AgentStats._stats._moveSpeed))
+                if (path.Count >= _playerStats.getStat(AgentStats._stats._moveSpeed))
+                {
+                    agentMove.MoveAgent(path[(int) _playerStats.getStat(AgentStats._stats._moveSpeed)]);
+                }
+                else
                 {
                     agentMove.MoveAgent(hitNode);
-                    waitingToSelect = false;
-                    Pause();
                 }
             }
         }
