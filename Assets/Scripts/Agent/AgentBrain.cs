@@ -30,7 +30,6 @@ public class AgentBrain : MonoBehaviour, IActor
         lGraph = levelManager.GetInstanceLevelGraph();
         _agentMove = transform.GetComponent<AgentMove>();
         _agentStats = transform.GetComponent<AgentStats>();
-        patrolNodes = new();
         RegisterSelf();
     }
     public void NextActorTurn()
