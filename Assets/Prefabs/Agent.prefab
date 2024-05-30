@@ -168,6 +168,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _safeDistance: 5
   _maxDistance: 10
+  currentTargetPos:
+    displayName: 
+    position: {x: 0, y: 0, z: 0}
 --- !u!114 &2581277944657455414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,4 +185,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hitPoints: 15
   _moveSpeed: 10
-  _initiative: 10
+  _initiative: 2

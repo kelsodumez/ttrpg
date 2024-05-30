@@ -17,6 +17,7 @@ public class PlayerInput : MonoBehaviour, IActor
     private float enter = 0.0f;
     Plane nPlane = new Plane(Vector3.up, Vector3.zero);
     private AgentStats _playerStats;
+    private List<Node> path;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,7 +43,7 @@ public class PlayerInput : MonoBehaviour, IActor
             {
                 Debug.Log($"player turn");
                 Node hitNode = SelectNode();
-                List<Node> path = Pathfind.Astar(lGraph, agentMove.GetAgentPos(), hitNode);
+                path = Pathfind.Astar(lGraph, agentMove.GetAgentPos(), hitNode);
                 if (path.Count >= _playerStats.getStat(AgentStats._stats._moveSpeed))
                 {
                     agentMove.MoveAgent(path[(int) _playerStats.getStat(AgentStats._stats._moveSpeed)]);
@@ -96,5 +97,13 @@ public class PlayerInput : MonoBehaviour, IActor
     public float GetActorInititiative()
     {
         return _playerStats.getStat(AgentStats._stats._inititiative);
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.magenta;
+        foreach (Node node in path)
+        {
+            Gizmos.DrawSphere(node.getNodePos(), .4f);
+        }
     }
 }

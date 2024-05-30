@@ -13,7 +13,6 @@ public class AgentMove : MonoBehaviour
     void Start() 
     {
         moveLerpRate = 2f;
-        Debug.Log(moveLerpRate);
         levelManager = GameObject.Find("Level Manager").GetComponent<LevelManager>();
         lGraph = levelManager.GetInstanceLevelGraph();
 
@@ -37,6 +36,7 @@ public class AgentMove : MonoBehaviour
     public void MoveAgent(Node goalPos)
     {
         List<Node> path = Pathfind.Astar(lGraph, agentPos, goalPos);
+        Debug.Log(path.Count);
         StartCoroutine(LerpThroughNode(path));
         agentPos = goalPos;
     }
@@ -67,6 +67,4 @@ public class AgentMove : MonoBehaviour
         }
         transform.GetComponent<IActor>().Pause();
     }
-
-
 }

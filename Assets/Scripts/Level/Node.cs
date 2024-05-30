@@ -9,6 +9,7 @@ public class Node
     private float cost;
     private GameObject content; 
 
+
     public Node(Vector3 nodePos, float cost)
     {
         setNodePos(nodePos);
@@ -51,5 +52,10 @@ public class Node
     public GameObject GetContent()
     {
         return content;
+    }
+
+    public bool IsAtPos(Vector3 pos)
+    {
+        return nodePos == pos;
     }
 }

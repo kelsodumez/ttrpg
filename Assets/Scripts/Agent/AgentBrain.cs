@@ -17,6 +17,10 @@ public class AgentBrain : MonoBehaviour, IActor
     [SerializeField] private float _maxDistance = 10f;
     [SerializeField] private Node[] patrolNodes;
     private bool playerFound = false;
+    private PatrolRoute patrolRoute;
+    [SerializeField] private Patrol currentTargetPos;
+
+    private List<Node> path;
 
     public float GetActorInititiative()
     {
@@ -30,6 +34,14 @@ public class AgentBrain : MonoBehaviour, IActor
         lGraph = levelManager.GetInstanceLevelGraph();
         _agentMove = transform.GetComponent<AgentMove>();
         _agentStats = transform.GetComponent<AgentStats>();
+        foreach (Patrol patrolPoint in patrolRoute.GetPatrols())
+        {  
+            if (patrolPoint.position == transform.position)
+            {
+                currentTargetPos = patrolPoint;
+            }
+        }
+
         RegisterSelf();
     }
     public void NextActorTurn()
@@ -98,8 +110,21 @@ public class AgentBrain : MonoBehaviour, IActor
 
     private void Patrol()
     {
-
+        // Debug.Log($"{transform.position}, {currentTargetPos.position}");
+        if (transform.position == currentTargetPos.position)
+        {
+            List<Patrol> patrols = patrolRoute.GetPatrols();
+            if (patrols.IndexOf(currentTargetPos) == patrols.Count - 1)
+            {
+                Debug.Log($"{patrols.IndexOf(currentTargetPos)}");
+                currentTargetPos = patrols[0];
+                Debug.Log($"{patrols.IndexOf(currentTargetPos)}");
+            }
+            else currentTargetPos = patrols[patrols.IndexOf(currentTargetPos)+1];
+        }
+        NavigateTo(currentTargetPos.position);
     }
+
     private void CloseDistance(Vector3 point, float dist)
     {
         Node pointNode = lGraph.GetNode((int) point.x, (int) point.z);
@@ -132,11 +157,26 @@ public class AgentBrain : MonoBehaviour, IActor
     private void NavigateTo(Vector3 point)
     {
         Node goalNode = lGraph.GetNode((int) point.x, (int) point.z);
-        List<Node> path = Pathfind.Astar(lGraph, _agentMove.getNode(), goalNode);
+        path = Pathfind.Astar(lGraph, _agentMove.getNode(), goalNode);
         if (path.Count > _agentStats.getStat(AgentStats._stats._moveSpeed))
         {
             goalNode = path[(int) AgentStats._stats._moveSpeed];
         }
+        Debug.Log(goalNode.getNodePos());
         _agentMove.MoveAgent(goalNode);
+    }
+
+    public void SetPatrolRoute(PatrolRoute newPatrolRoute)
+    {
+        this.patrolRoute = newPatrolRoute;
+    }
+
+    private void OnDrawGizmos()
+    {
+        foreach (Node node in path)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawSphere(node.getNodePos(), .4f);
+        }
     }
 }
